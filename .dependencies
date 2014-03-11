@@ -1,0 +1,14 @@
+node.o: node.cc node.h table.h context.h topology.h link.h eventqueue.h \
+ event.h messages.h error.h
+link.o: link.cc link.h
+table.o: table.cc table.h
+messages.o: messages.cc messages.h node.h table.h link.h
+topology.o: topology.cc topology.h node.h table.h link.h
+event.o: event.cc event.h messages.h node.h table.h link.h topology.h \
+ context.h eventqueue.h
+eventqueue.o: eventqueue.cc eventqueue.h event.h messages.h node.h \
+ table.h link.h topology.h
+context.o: context.cc context.h topology.h node.h table.h link.h \
+ eventqueue.h event.h messages.h
+routesim.o: routesim.cc context.h topology.h node.h table.h link.h \
+ eventqueue.h event.h messages.h
