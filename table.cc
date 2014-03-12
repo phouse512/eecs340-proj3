@@ -17,10 +17,15 @@ ostream & Table::Print(ostream &os) const
 
 deque<Row>::iterator Table::FindMatching(const unsigned dest) 
 {
+  // find and return any matching rows with a destination of input dest
 }
 
 Row *Table::GetNext(const unsigned dest) 
 {
+  // return a row that matches the destination 
+
+  // use Table::FindMatching to find the next row that matches the input dest
+  // return a new row that has its attributes set by the the deque<Row> returned by FindMatching  
 }
 
 void Table::SetNext(const unsigned dest, const Row &r)

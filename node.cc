@@ -171,6 +171,12 @@ void Node::LinkUpdate(const Link *l)
 {
   // update our table
   // send out routing mesages
+
+
+  //update algorithm:
+  // loop through every y in N
+  //    iterate through deque<Row> starting at m.begin() to m.end()
+  
   cerr << *this<<": Link Update: "<<*l<<endl;
 }
 
@@ -184,7 +190,6 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
     cerr << " ourself - ignored\n";
     return;
   }
-
 }
 
 void Node::TimeOut()
