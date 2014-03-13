@@ -169,14 +169,79 @@ ostream & Node::Print(ostream &os) const
 
 void Node::LinkUpdate(const Link *l)
 {
+  //first update the table entry for the affected neighbor
+  Row* neighbor = table.GetNext(l->GetDest());
+
+  if( (neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
+      || (neighbor->dest_node == neighbor->next_node) //update if new latency is greater but prev was a direct link
+      || (neighbor == NULL) ){ //update if link is new
+      //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS?
+  
+    const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
+    table.SetNext(neighbor->dest_node, new_neighbor);
+
+    /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
+
+    //grab the table's rows
+    deque<Row> rows = table.GetRows();
+    //grab neighbors
+    deque<Node*>* neighbors = table.GetNeighbors();
+
+    //loop through each destination in table
+    for(deque<Row>::iterator d = rows.begin(); d != rows.end(); ++d){
+
+      //initialize best cost to initial cost
+      double lowest_cost = d.cost;
+      unsigned new_next_node = d.next_node;
+
+      //loop through neighbors
+      for(deque<Node*>::iterator n = neighbors.begin(); n != neighbors.end(); ++n){
+
+        //calculate cost through each neighbor
+        //first get cost to neighbor
+        double cost_to_neighbor = table.GetNext(n->GetNumber())->cost;
+        
+        //now get cost to destination d
+        //get the table
+        Row* n_row = n->GetRoutingTable()->GetNext(d);
+
+        //check if n_row is null, if neighbor doesn't know about destination
+        if(n_row != NULL){
+          //get the cost to destination
+          double cost_to_d = n_row->cost;
+          //total cost
+          double total_cost = cost_to_neighbor + cost_to_d;
+
+          if(total_cost < lowest_cost){
+            lowest_cost = total_cost;
+            new_next_node = n->GetNumber();
+          }
+        }//null check
+
+      }//for neighbors
+
+      if(new_next_node != d.next_node || lowest_cost != d.cost){
+        const Row new_update(d.dest_node, new_next_node, lowest_cost);
+        table.SetNext(d.dest_node, new_update);
+      }
+
+    }//for rows
+
+  }//if update
+  
+
+  //update if the cost changes, 
+
   // update our table
-  // send out routing mesages
+    //if 
+
+  // send out routing mesages to neighbors
 
 
   //update algorithm:
   // loop through every y in N
   //    iterate through deque<Row> starting at m.begin() to m.end()
-  
+
   cerr << *this<<": Link Update: "<<*l<<endl;
 }
 
@@ -200,10 +265,16 @@ void Node::TimeOut()
 
 Node *Node::GetNextHop(const Node *destination) const
 {
+  //get the row that has the destination you want
+  Row* dest_row = table.GetNext(destination->GetNumber());
+
+  //return new node, everything but number in constructor is junk
+  return new Node(dest_row->next_node, NULL, 0, 0);
 }
 
 Table *Node::GetRoutingTable() const
 {
+  return new Table(table);
 }
 
 

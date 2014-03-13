@@ -43,6 +43,7 @@ inline ostream & operator<<(ostream &os, const Row &r) { return r.Print(os);}
 class Table {
   deque<Row> m;
  public:
+  deque<Row> Table::GetRows();
   deque<Row>::iterator FindMatching(const unsigned dest);
   Row *GetNext(const unsigned dest);
   void SetNext(const unsigned dest, const Row &r);
