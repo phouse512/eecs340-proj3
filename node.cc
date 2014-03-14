@@ -189,6 +189,7 @@ void Node::LinkUpdate(const Link *l)
 
     /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
     UpdateTable();
+    cerr << "end of neihgbor null" << endl;
   }
   else {
     if((neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
