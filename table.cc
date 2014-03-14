@@ -40,8 +40,8 @@ Row *Table::GetNext(const unsigned dest)
     return new Row(i->dest_node, i->next_node, i->cost);
   }
   else{
-    //return new Row(-1, -1, 0);
-    return NULL;
+    return new Row(-1, -1, 0);
+    //return NULL;
   }
 
   // use Table::FindMatching to find the next row that matches the input dest
