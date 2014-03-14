@@ -184,8 +184,9 @@ void Node::LinkUpdate(const Link *l)
     cerr << "neighbor is equal to null" << endl;
     //send change to neighbors
     Node dest_node = Node(l->GetDest(), context, 0, 0);
+    cerr << "is it after dest_node?" << endl;
     SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
-
+    cerr << "is it after sendToNeighbors" << endl;
 
     /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
     UpdateTable();
