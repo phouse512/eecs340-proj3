@@ -172,11 +172,17 @@ void Node::LinkUpdate(const Link *l)
   //first update the table entry for the affected neighbor
   Row* neighbor = table.GetNext(l->GetDest());
 
-  if( (neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
-      || (neighbor->dest_node == neighbor->next_node) //update if new latency is greater but prev was a direct link
-      || (neighbor == NULL) ){ //update if link is new
+  
+  cerr << *this << ": Linkupdate " << *l << endl;
+
+  cerr << "Neighbor: " << neighbor << endl;
+  //if( (neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
+    //  || (neighbor->dest_node == neighbor->next_node) //update if new latency is greater but prev was a direct link
+      //|| (neighbor == NULL) ){ //update if link is new
       //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS?
   
+if(neighbor->next_node == l->GetDest() || neighbor->cost < 1 || neighbor->cost < l->GetLatency()){
+
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
     table.SetNext(neighbor->dest_node, new_neighbor);
 
