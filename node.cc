@@ -249,6 +249,13 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
   unsigned src_node = m->srcnode.GetNumber();
   Row* src_row = table.GetNext(src_node);
 
+  if(src_row == NULL) {
+    cerr << "src is null" << endl;
+  }
+  if(dest_row == NULL) {
+    cerr << "dest is null" << endl;
+  }
+
   if(dest_row == NULL){
     if(dest_node != number){
       const Row new_row(dest_node, src_node, src_row->cost + m->cost);
