@@ -185,7 +185,7 @@ if(neighbor->next_node == l->GetDest() || neighbor->cost < 1 || neighbor->cost <
 
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
     table.SetNext(neighbor->dest_node, new_neighbor);
-
+    cerr << "werking" << endl;
     //send change to neighbors
     Node dest_node = Node(neighbor->dest_node, context, 0, 0);
     SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
