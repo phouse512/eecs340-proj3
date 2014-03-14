@@ -179,20 +179,6 @@ void Node::LinkUpdate(const Link *l)
 
   if (neighbor == NULL){
 
-    cerr << "GetDest: " << l->GetDest() << endl;
-    cerr << "Number: " << number << endl;
-    const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
-    table.SetNext(l->GetDest(), new_neighbor);
-    cerr << "neighbor is equal to null" << endl;
-    //send change to neighbors
-    Node dest_node = Node(l->GetDest(), context, 0, 0);
-    cerr << "is it after dest_node?" << endl;
-    SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
-    cerr << "is it after sendToNeighbors" << endl;
-
-    /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
-    UpdateTable();
-    //cerr << "end of neihgbor null" << endl;
   }
   else {
     if((neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
@@ -261,7 +247,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
   }
 
   if(dest_row == NULL){
-    if(dest_node != number){
+    /*if(dest_node != number){
       const Row new_row(dest_node, src_node, src_row->cost + m->cost);
       table.SetNext(dest_node, new_row);
 
@@ -277,7 +263,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
       Node update_node = Node(src_node, context, 0, 0);
       SendToNeighbors(new RoutingMessage(*this, update_node, m->cost));
     }
-    UpdateTable();
+    UpdateTable();*/
   } else {
     if((dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
         || (dest_node == number)){ //update if destination prev not accessible
