@@ -179,6 +179,8 @@ void Node::LinkUpdate(const Link *l)
 
   if (neighbor == NULL){
 
+    cerr << "GetDest: " << l->GetDest() << endl;
+    cerr << "Number: " << number << endl;
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
     table.SetNext(l->GetDest(), new_neighbor);
     cerr << "neighbor is equal to null" << endl;
@@ -190,7 +192,7 @@ void Node::LinkUpdate(const Link *l)
 
     /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
     UpdateTable();
-    cerr << "end of neihgbor null" << endl;
+    //cerr << "end of neihgbor null" << endl;
   }
   else {
     if((neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
