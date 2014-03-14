@@ -356,11 +356,13 @@ void Node::UpdateTable(){
         
         if(cost_to_neighbor == NULL){
           cerr << "cost_to_neighbor is NULL :(" << endl;
+        } else {
+          cerr << "cost_to_neighbor is not NULL :D" << endl;
         }
         //now get cost to destination d
         //get the table
         Row* n_row = (*n)->GetRoutingTable()->GetNext(d->dest_node);
-
+        cerr << "getRouting Table for dest node" << endl;
         //check if n_row is null, if neighbor doesn't know about destination
         if(n_row != NULL){
           //get the cost to destination
