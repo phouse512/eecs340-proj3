@@ -178,7 +178,7 @@ void Node::LinkUpdate(const Link *l)
   cerr << "Neighbor: " << neighbor << endl;
   if( (neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
       || (neighbor->dest_node == neighbor->next_node) //update if new latency is greater but prev was a direct link
-      || (neighbor->dest_node == -1 && neighbor->next_node == -1) ){ //update if link is new
+      || (neighbor == NULL) ){ //update if link is new
       //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS?
   
 //if((neighbor->next_node == l->GetDest() || neighbor->cost < 1 || neighbor->cost < l->GetLatency()){
@@ -287,7 +287,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
 
   if( (dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
       || (dest_node == number) //update if destination is ourself
-      || (dest_row->next_node == -1 && dest_row->dest_node == -1) ){ //update if destination prev not accessible
+      || (dest_row == NULL) ){ //update if destination prev not accessible
       //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS? MAKE SURE NO SEGFAULT!
     if(dest_node != number){
       const Row new_row(dest_node, src_node, src_row->cost + m->cost);

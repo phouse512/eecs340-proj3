@@ -41,7 +41,7 @@ Row *Table::GetNext(const unsigned dest)
   }
   else{
     //return new Row(-1, -1, 0);
-    return new Row(-1,-1,0);
+    return NULL;
   }
 
   // use Table::FindMatching to find the next row that matches the input dest
