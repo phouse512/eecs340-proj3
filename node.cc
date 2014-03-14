@@ -181,7 +181,7 @@ void Node::LinkUpdate(const Link *l)
 
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
     table.SetNext(l->GetDest(), new_neighbor);
-    cerr << "werking" << endl;
+    cerr << "neighbor is equal to null" << endl;
     //send change to neighbors
     Node dest_node = Node(l->GetDest(), context, 0, 0);
     SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
@@ -200,7 +200,7 @@ void Node::LinkUpdate(const Link *l)
 
       const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
       table.SetNext(neighbor->dest_node, new_neighbor);
-      cerr << "werking" << endl;
+      cerr << "neighbor is theoretically not null" << endl;
       //send change to neighbors
       Node dest_node = Node(neighbor->dest_node, context, 0, 0);
       SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
