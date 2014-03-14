@@ -55,6 +55,7 @@ void Table::SetNext(const unsigned dest, const Row &r)
   if(i != m.end()){
     i->next_node = r.next_node;
     i->cost = r.cost; 
+    i->dest_node = r.dest_node;
   }
   else{
     //add row to back of deque
