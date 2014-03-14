@@ -349,11 +349,14 @@ void Node::UpdateTable(){
 
       //loop through neighbors
       for(deque<Node*>::iterator n = neighbors->begin(); n != neighbors->end(); ++n){
-
+        cerr << "inside neighbor loop" << endl;
         //calculate cost through each neighbor
         //first get cost to neighbor
         double cost_to_neighbor = table.GetNext((*n)->GetNumber())->cost;
         
+        if(cost_to_neighbor == NULL){
+          cerr << "cost_to_neighbor is NULL :(" << endl;
+        }
         //now get cost to destination d
         //get the table
         Row* n_row = (*n)->GetRoutingTable()->GetNext(d->dest_node);
