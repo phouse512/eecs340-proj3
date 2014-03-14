@@ -287,7 +287,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
 
   if( (dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
       || (dest_node == number) //update if destination is ourself
-      || (dest_row->next_node == -1 && dest_node->dest_node == -1) ){ //update if destination prev not accessible
+      || (dest_row->next_node == -1 && dest_row->dest_node == -1) ){ //update if destination prev not accessible
       //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS? MAKE SURE NO SEGFAULT!
     if(dest_node != number){
       const Row new_row(dest_node, src_node, src_row->cost + m->cost);
