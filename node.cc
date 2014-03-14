@@ -333,13 +333,16 @@ ostream & Node::Print(ostream &os) const
 
 void Node::UpdateTable(){
     //grab the table's rows
+    cerr << "inside update table" << endl;
     deque<Row> rows = table.GetRows();
     //grab neighbors
+    cerr << "after getRows" << endl;
     deque<Node*>* neighbors = GetNeighbors();
+    cerr << "after getNeighbors" << endl;
 
     //loop through each destination in table
     for(deque<Row>::iterator d = rows.begin(); d != rows.end(); ++d){
-
+      cerr << "loop iteration" << endl;
       //initialize best cost to initial cost
       double lowest_cost = d->cost;
       unsigned new_next_node = d->next_node;
