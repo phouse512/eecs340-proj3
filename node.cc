@@ -176,12 +176,8 @@ void Node::LinkUpdate(const Link *l)
   cerr << *this << ": Linkupdate " << *l << endl;
 
   cerr << "Neighbor: " << neighbor << endl;
-  if( (neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
-      || (neighbor->dest_node == neighbor->next_node) //update if new latency is greater but prev was a direct link
-      || (neighbor == NULL) ){ //update if link is new
-      //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS?
-  
-//if((neighbor->next_node == l->GetDest() || neighbor->cost < 1 || neighbor->cost < l->GetLatency()){
+
+  if (neighbor == NULL){
 
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
     table.SetNext(neighbor->dest_node, new_neighbor);
@@ -193,64 +189,33 @@ void Node::LinkUpdate(const Link *l)
 
     /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
     UpdateTable();
-    // //grab the table's rows
-    // deque<Row> rows = table.GetRows();
-    // //grab neighbors
-    // deque<Node*>* neighbors = GetNeighbors();
+  }
+  else {
+    if((neighbor->cost > l->GetLatency() && neighbor!=NULL) //update if new latency is less
+        || (neighbor->dest_node == neighbor->next_node)) //update if new latency is greater but prev was a direct link
+      { //update if link is new
+        //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS?
+    
+  //if((neighbor->next_node == l->GetDest() || neighbor->cost < 1 || neighbor->cost < l->GetLatency()){
 
-    // //loop through each destination in table
-    // for(deque<Row>::iterator d = rows.begin(); d != rows.end(); ++d){
-
-    //   //initialize best cost to initial cost
-    //   double lowest_cost = d->cost;
-    //   unsigned new_next_node = d->next_node;
-
-    //   //loop through neighbors
-    //   for(deque<Node*>::iterator n = neighbors->begin(); n != neighbors->end(); ++n){
-
-    //     //calculate cost through each neighbor
-    //     //first get cost to neighbor
-    //     double cost_to_neighbor = table.GetNext((*n)->GetNumber())->cost;
-        
-    //     //now get cost to destination d
-    //     //get the table
-    //     Row* n_row = (*n)->GetRoutingTable()->GetNext(d->dest_node);
-
-    //     //check if n_row is null, if neighbor doesn't know about destination
-    //     if(n_row != NULL){
-    //       //get the cost to destination
-    //       double cost_to_d = n_row->cost;
-    //       //total cost
-    //       double total_cost = cost_to_neighbor + cost_to_d;
-
-    //       if(total_cost < lowest_cost){
-    //         lowest_cost = total_cost;
-    //         new_next_node = (*n)->GetNumber();
-    //       }
-    //     }//null check
-
-    //   }//for neighbors
-
-    //   //if placeholders changed, update
-    //   if(new_next_node != d->next_node || lowest_cost != d->cost){
-    //     const Row new_update(d->dest_node, new_next_node, lowest_cost);
-    //     table.SetNext(d->dest_node, new_update);
-
-    //     //send change to neighbors
-    //     Node changed_node = Node(d->dest_node, context, 0, 0);
-    //     SendToNeighbors(new RoutingMessage(*this, changed_node, lowest_cost));
-    //   }
-
-    // }//for rows
+      const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
+      table.SetNext(neighbor->dest_node, new_neighbor);
+      cerr << "werking" << endl;
+      //send change to neighbors
+      Node dest_node = Node(neighbor->dest_node, context, 0, 0);
+      SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
 
 
-  }//if update
-  
+      /* LINK UPDATE COMPLETE. NOW UPDATE TABLE */
+      UpdateTable();
 
-  //update if the cost changes, 
+    }//if update
+    
+  }
+    //update if the cost changes, 
 
-  // update our table
-    //if 
+    // update our table
+      //if 
 
   // send out routing mesages to neighbors
 
@@ -284,11 +249,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
   unsigned src_node = m->srcnode.GetNumber();
   Row* src_row = table.GetNext(src_node);
 
-
-  if( (dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
-      || (dest_node == number) //update if destination is ourself
-      || (dest_row == NULL) ){ //update if destination prev not accessible
-      //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS? MAKE SURE NO SEGFAULT!
+  if(dest_row == NULL){
     if(dest_node != number){
       const Row new_row(dest_node, src_node, src_row->cost + m->cost);
       table.SetNext(dest_node, new_row);
@@ -306,7 +267,29 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
       SendToNeighbors(new RoutingMessage(*this, update_node, m->cost));
     }
     UpdateTable();
-  }
+  } else {
+    if((dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
+        || (dest_node == number)){ //update if destination prev not accessible
+        //WHAT ABOUT ZOMBIE ENTRIES OR DELETIONS? MAKE SURE NO SEGFAULT!
+      if(dest_node != number){
+        const Row new_row(dest_node, src_node, src_row->cost + m->cost);
+        table.SetNext(dest_node, new_row);
+
+        //send change to neighbors
+        Node update_node = Node(dest_node, context, 0, 0);
+        SendToNeighbors(new RoutingMessage(*this, update_node, src_row->cost + m->cost));
+      }
+      else{ //if dest is ourselves...basically a link update
+        const Row new_row(src_node, src_node, m->cost);
+        table.SetNext(src_node, new_row);
+
+        //send change to neighbors
+        Node update_node = Node(src_node, context, 0, 0);
+        SendToNeighbors(new RoutingMessage(*this, update_node, m->cost));
+      }
+      UpdateTable();
+    }
+  } 
 }
 
 void Node::TimeOut()
