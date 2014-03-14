@@ -58,6 +58,7 @@ class Node {
   //
   // Students will WRITE THESE
   //
+  void UpdateTable();
   virtual void LinkUpdate(const Link *l);
   virtual void ProcessIncomingRoutingMessage(const RoutingMessage *m);
   virtual void TimeOut();

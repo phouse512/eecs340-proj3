@@ -28,7 +28,7 @@ deque<Row>::iterator Table::FindMatching(const unsigned dest)
       return i;
     } 
   }
-  return NULL;
+  return m.end();
 }
 
 Row *Table::GetNext(const unsigned dest) 
@@ -36,7 +36,7 @@ Row *Table::GetNext(const unsigned dest)
   // return a row that matches the destination 
   deque<Row>::iterator i = FindMatching(dest);
 
-  if(i != NULL){
+  if(i != m.end()){
     return new Row(i->dest_node, i->next_node, i->cost);
   }
   else{
@@ -52,9 +52,9 @@ void Table::SetNext(const unsigned dest, const Row &r)
 {
   deque<Row>::iterator i = FindMatching(dest);
 
-  if(i != NULL){
-    i->next_node = r->next_node;
-    i->cost = r->cost; 
+  if(i != m.end()){
+    i->next_node = r.next_node;
+    i->cost = r.cost; 
   }
   else{
     //add row to back of deque

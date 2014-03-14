@@ -3,9 +3,9 @@ CXX = g++
 CXXFLAGS = -g -gstabs+ -ggdb -Wall
 LDFLAGS = 
 
-TYPE = GENERIC
+#TYPE = GENERIC
 #TYPE = LINKSTATE
-#TYPE = DISTANCEVECTOR
+TYPE = DISTANCEVECTOR
 
 LIB_OBJS = node.o       \
            link.o       \
