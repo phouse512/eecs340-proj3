@@ -180,10 +180,10 @@ void Node::LinkUpdate(const Link *l)
   if (neighbor == NULL){
 
     const Row new_neighbor(l->GetDest(), l->GetDest(), l->GetLatency());
-    table.SetNext(neighbor->dest_node, new_neighbor);
+    table.SetNext(l->GetDest(), new_neighbor);
     cerr << "werking" << endl;
     //send change to neighbors
-    Node dest_node = Node(neighbor->dest_node, context, 0, 0);
+    Node dest_node = Node(l->GetDest(), context, 0, 0);
     SendToNeighbors(new RoutingMessage(*this, dest_node, l->GetLatency()));
 
 
