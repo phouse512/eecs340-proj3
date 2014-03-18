@@ -203,20 +203,10 @@ void Node::LinkUpdate(const Link *l)
     
   }
     //update if the cost changes, 
-
-    // update our table
-      //if 
-
-  // send out routing mesages to neighbors
-
-
-  //update algorithm:
-  // loop through every y in N
-  //    iterate through deque<Row> starting at m.begin() to m.end()
+  //iterate through deque<Row> starting at m.begin() to m.end()
 
   cerr << *this<<": Link Update: "<<*l<<endl;
 }
-
 
 void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
 {
@@ -247,23 +237,7 @@ void Node::ProcessIncomingRoutingMessage(const RoutingMessage *m)
   }
 
   if(dest_row == NULL){
-    /*if(dest_node != number){
-      const Row new_row(dest_node, src_node, src_row->cost + m->cost);
-      table.SetNext(dest_node, new_row);
 
-      //send change to neighbors
-      Node update_node = Node(dest_node, context, 0, 0);
-      SendToNeighbors(new RoutingMessage(*this, update_node, src_row->cost + m->cost));
-    }
-    else{ //if dest is ourselves...basically a link update
-      const Row new_row(src_node, src_node, m->cost);
-      table.SetNext(src_node, new_row);
-
-      //send change to neighbors
-      Node update_node = Node(src_node, context, 0, 0);
-      SendToNeighbors(new RoutingMessage(*this, update_node, m->cost));
-    }
-    UpdateTable();*/
   } else {
     if((dest_row->cost > src_row->cost + m->cost) //update if new path plus cost to neighbor better
         || (dest_node == number)){ //update if destination prev not accessible
@@ -321,23 +295,18 @@ ostream & Node::Print(ostream &os) const
 
 void Node::UpdateTable(){
     //grab the table's rows
-    cerr << "inside update table" << endl;
     deque<Row> rows = table.GetRows();
     //grab neighbors
-    cerr << "after getRows" << endl;
     deque<Node*>* neighbors = GetNeighbors();
-    cerr << "after getNeighbors" << endl;
 
     //loop through each destination in table
     for(deque<Row>::iterator d = rows.begin(); d != rows.end(); ++d){
-      cerr << "loop iteration" << endl;
       //initialize best cost to initial cost
       double lowest_cost = d->cost;
       unsigned new_next_node = d->next_node;
 
       //loop through neighbors
       for(deque<Node*>::iterator n = neighbors->begin(); n != neighbors->end(); ++n){
-        cerr << "inside neighbor loop" << endl;
         //calculate cost through each neighbor
         //first get cost to neighbor
         double cost_to_neighbor = table.GetNext((*n)->GetNumber())->cost;
@@ -350,7 +319,7 @@ void Node::UpdateTable(){
         //now get cost to destination d
         //get the table
         Row* n_row = (*n)->GetRoutingTable()->GetNext(d->dest_node);
-        cerr << "getRouting Table for dest node" << endl;
+
         //check if n_row is null, if neighbor doesn't know about destination
         if(n_row != NULL){
           //get the cost to destination
